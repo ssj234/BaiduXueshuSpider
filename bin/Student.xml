@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<!-- 通过typeAlias使得我们在下面使用Student实体类的时候不需要写包名 -->
+<typeAlias alias="Student" type="com.cmbc.ibatis.test1.Student"/>
+
+<!-- 这样以后改了sql，就不需要去改java代码了 -->
+<!-- id表示select里的sql语句，resultClass表示返回结果的类型 -->
+<select id="selectAllStudent" resultClass="Student">
+select * from tbl_student
+</select>
+
+<!-- parameterClass表示参数的内容 -->
+<!-- #表示这是一个外部调用的需要传进的参数，可以理解为占位符 -->
+<select id="selectStudentById" parameterClass="int"  resultClass="Student">
+select * from tbl_student where id=#id#
+</select>
+
+<!-- 注意这里的resultClass类型，使用Student类型取决于queryForList还是queryForObject -->
+<select id="selectStudentByName" parameterClass="String" resultClass="Student">
+select name,birth,score from tbl_student where name like '%$name$%'
+</select>
+
+ <insert id="addStudent" parameterClass="Student">
+ insert into tbl_student(name,birth,score) values (#name#,#birth#,#score#)
+ <selectKey resultClass="int" keyProperty="id">
+ select @@identity as inserted
+ <!-- 这里需要说明一下不同的数据库主键的生成，对各自的数据库有不同的方式： -->
+ <!-- mysql:SELECT LAST_INSERT_ID() AS VALUE -->
+ <!-- mssql:select @@IDENTITY as value -->
+ <!-- oracle:SELECT STOCKIDSEQUENCE.NEXTVAL AS VALUE FROM DUAL -->
+ <!-- 还有一点需要注意的是不同的数据库生产商生成主键的方式不一样，有些是预先生成 (pre-generate)，如Oracle和PostgreSQL。
+ 有些是事后生成(post-generate)主键的，如MySQL和SQL Server 所以如果是Oracle数据库，则需要将
+ectKey写在insert之前 -->
+ </selectKey>
+ </insert>
+ 
+ <insert id="addStudent2" parameterClass="java.util.HashMap">
+ insert into tbl_student(name,birth,score) values (#name#,#birth#,#score#)
+ <selectKey resultClass="int" keyProperty="id">
+ select @@identity as inserted
+ <!-- 这里需要说明一下不同的数据库主键的生成，对各自的数据库有不同的方式： -->
+ <!-- mysql:SELECT LAST_INSERT_ID() AS VALUE -->
+ <!-- mssql:select @@IDENTITY as value -->
+ <!-- oracle:SELECT STOCKIDSEQUENCE.NEXTVAL AS VALUE FROM DUAL -->
+ <!-- 还有一点需要注意的是不同的数据库生产商生成主键的方式不一样，有些是预先生成 (pre-generate)，如Oracle和PostgreSQL。
+ 有些是事后生成(post-generate)主键的，如MySQL和SQL Server 所以如果是Oracle数据库，则需要将
+ectKey写在insert之前 -->
+ </selectKey>
+ </insert>
+
+ <delete id="deleteStudentById" parameterClass="int">
+ <!-- #id#里的id可以随意取，但是上面的insert则会有影响，因为上面的name会从Student里的属性里去查找-->
+ <!-- 我们也可以这样理解，如果有#占位符，则ibatis会调用parameterClass里的属性去赋值 -->
+ delete from tbl_student where id=#id#
+ </delete>
+
+ <update id="updateStudent" parameterClass="Student">
+ update tbl_student set name=#name#,birth=#birth#,score=#score# where id=#id#
+ </update>
+ </sqlMap>

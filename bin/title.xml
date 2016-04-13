@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+<!-- 通过typeAlias使得我们在下面使用Student实体类的时候不需要写包名 -->
+<typeAlias alias="Title" type="com.sail.db.step.one.Title"/>
+<typeAlias alias="Abstract" type="com.sail.db.step.one.Abstract"/>
+
+<!-- 这样以后改了sql，就不需要去改java代码了 -->
+<!-- id表示select里的sql语句，resultClass表示返回结果的类型 -->
+<select id="selectAll" resultClass="Title">
+select * from title
+</select>
+
+<!-- parameterClass表示参数的内容 -->
+<!-- #表示这是一个外部调用的需要传进的参数，可以理解为占位符 -->
+<select id="selectById" parameterClass="int"  resultClass="Title">
+select * from title where id=#id#
+</select>
+
+
+ <insert id="addTitle" parameterClass="Title">
+ insert into title(name,link,showname,status,scope) values (#name#,#link#,#showname#,#status#,#scope#)
+ <selectKey resultClass="int" keyProperty="id">
+SELECT LAST_INSERT_ID() AS VALUE
+ <!-- 这里需要说明一下不同的数据库主键的生成，对各自的数据库有不同的方式： -->
+ <!-- mysql:SELECT LAST_INSERT_ID() AS VALUE -->
+ <!-- mssql:select @@IDENTITY as value -->
+ <!-- oracle:SELECT STOCKIDSEQUENCE.NEXTVAL AS VALUE FROM DUAL -->
+ <!-- 还有一点需要注意的是不同的数据库生产商生成主键的方式不一样，有些是预先生成 (pre-generate)，如Oracle和PostgreSQL。
+ 有些是事后生成(post-generate)主键的，如MySQL和SQL Server 所以如果是Oracle数据库，则需要将
+ectKey写在insert之前 -->
+ </selectKey>
+ </insert>
+ 
+ <insert id="addAbs" parameterClass="Abstract">
+ insert into abstract(name,cited,pdf,titleId) values (#name#,#cited#,#pdf#,#titleId#)
+ </insert>
+ 
+  <update id="updateTitle" parameterClass="Title">
+ update title set name=#name#,link=#link#,showname=#showname#,status=#status# where id=#id#
+ </update>
+ 
+ <!--按照领域查找所有的文件-->
+<select id="countTitle" parameterClass="java.util.HashMap"  resultClass="String">
+	select COUNT(*) from title a where a.scope=#scope# and a.status=#status#
+</select>
+
+
+<select id="getTitle" parameterClass="java.util.Map" resultClass="Title">
+      select * from title
+      where scope=#scope# and status=#status#
+      order by id limit #begin#,#pageSize#
+</select>
+
+<select id="getAbstract" parameterClass="java.util.Map" resultClass="Abstract">
+      select name from abstract where titleid=#titleid# 
+</select>
+
+ </sqlMap>
