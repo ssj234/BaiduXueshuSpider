@@ -6,6 +6,27 @@ public class Abstract {
 	private String cited;
 	private String pdf;
 	private int titleId;
+	private String year;
+	private String author;
+	public String publish;
+	public String getAuthor() {
+		return author==null?"":author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	public String getPublish() {
+		return publish==null?"":publish;
+	}
+	public void setPublish(String publish) {
+		this.publish = publish;
+	}
+	public String getYear() {
+		return year==null?"":year;
+	}
+	public void setYear(String year) {
+		this.year = year;
+	}
 	/**
 	 * @return the titleId
 	 */
@@ -41,8 +62,8 @@ public class Abstract {
 	 * @param cited the cited to set
 	 */
 	public void setCited(String cited) {
-		if(cited!=null)
-		this.cited = cited.substring(2,cited.length()-2);
+		//if(cited!=null)
+		this.cited = cited;//.substring(2,cited.length()-2);
 	}
 	/**
 	 * @return the pdf

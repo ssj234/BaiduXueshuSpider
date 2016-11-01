@@ -19,7 +19,7 @@ select * from title where id=#id#
 
 
  <insert id="addTitle" parameterClass="Title">
- insert into title(name,link,showname,status,scope) values (#name#,#link#,#showname#,#status#,#scope#)
+ insert into title(name,link,showname,status,scope,year) values (#name#,#link#,#showname#,#status#,#scope#,#year#)
  <selectKey resultClass="int" keyProperty="id">
 SELECT LAST_INSERT_ID() AS VALUE
  <!-- 这里需要说明一下不同的数据库主键的生成，对各自的数据库有不同的方式： -->
@@ -33,11 +33,11 @@ ectKey写在insert之前 -->
  </insert>
  
  <insert id="addAbs" parameterClass="Abstract">
- insert into abstract(name,cited,pdf,titleId) values (#name#,#cited#,#pdf#,#titleId#)
+ insert into abstract(name,cited,pdf,titleId,year,author,publish) values (#name#,#cited#,#pdf#,#titleId#,#year#,#author#,#publish#)
  </insert>
  
   <update id="updateTitle" parameterClass="Title">
- update title set name=#name#,link=#link#,showname=#showname#,status=#status# where id=#id#
+ update title set name=#name#,link=#link#,showname=#showname#,status=#status#,cited=#cited# where id=#id#
  </update>
  
  <!--按照领域查找所有的文件-->
@@ -53,7 +53,7 @@ ectKey写在insert之前 -->
 </select>
 
 <select id="getAbstract" parameterClass="java.util.Map" resultClass="Abstract">
-      select name from abstract where titleid=#titleid# 
+      select  name,cited,pdf,year,author,publish from abstract where titleid=#titleid# 
 </select>
 
  </sqlMap>

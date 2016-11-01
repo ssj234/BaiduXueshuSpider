@@ -30,7 +30,7 @@ public class GetAbstract {
 	int count=0;//abstract的页数
 	int status=4;
 	String namePrev=null;//记录上一页第一个名字
-	private int per=300;//每次读取300条，查找link
+	private int per=6000;//每次读取300条，查找link
 	public static void main(String[] args){
 		GetAbstract tdk=new GetAbstract();
 		tdk.beginParse(1,null);
@@ -52,6 +52,7 @@ public class GetAbstract {
 			} 
 //			break;
 			tmp=tmp+titles.size();
+			begin=begin+titles.size(); 
 		}
 		if(process!=null)process.show("获取参考文献结束!!!");
 	}
@@ -155,6 +156,58 @@ public class GetAbstract {
 				String cited=getJSONString(info, "sc_cited");
 				if(cited!=null)
 					abs.setCited(cited);
+				
+				JSONArray years=(JSONArray) info.get("sc_year");
+				if(years!=null&&years.size()>0){
+					//log.info(title.getId()+"获取sc_year失败");
+					//update(title, null);
+					//return null;
+					abs.setYear(years.getString(0));
+				}
+				
+				JSONArray authors=(JSONArray) info.get("sc_author");
+				if(authors!=null&&authors.size()>0){
+					//log.info(title.getId()+"获取sc_year失败");
+					//update(title, null);
+					//return null;
+					JSONObject names=authors.getJSONObject(0);
+					JSONArray aname=getJSONArray(names,"sc_name");
+					if(aname==null){
+						
+					}else{
+						try{
+							if(aname.getString(1)!=null)
+								abs.setAuthor(aname.getString(1));
+							else
+								abs.setAuthor(aname.getString(0));
+						}catch(Exception e){
+							abs.setAuthor(aname.getString(0));
+						}
+					}
+					
+				}
+				
+				JSONArray publishs=(JSONArray) info.get("sc_publish");
+				if(publishs!=null&&publishs.size()>0){
+					
+					JSONObject publish=publishs.getJSONObject(0);
+					JSONArray aname=getJSONArray(publish,"sc_journal");
+					if(aname==null){
+						abs.setPublish("");
+					}else{
+						try{
+							 if(aname.getString(1)!=null)
+									abs.setPublish(aname.getString(1));
+								else
+									abs.setPublish(aname.getString(0));
+						}catch(Exception e){
+							abs.setPublish(aname.getString(0));
+						}
+					}
+				}else{
+					abs.setPublish("");
+				}
+				
 				log.info(abs);
 				addAbs(abs);//插入数据库
 				if(i==0)
@@ -181,6 +234,15 @@ public class GetAbstract {
 		JSONObject rs = null;
 		try{
 			rs=(JSONObject) obj.get(key);
+		}catch(Exception e){
+			log.error("获取"+key+"失败",e);
+		}
+		return rs;
+	}
+	public JSONArray getJSONArray(JSONObject obj,String key){
+		JSONArray rs = null;
+		try{
+			rs= obj.getJSONArray(key);
 		}catch(Exception e){
 			log.error("获取"+key+"失败",e);
 		}

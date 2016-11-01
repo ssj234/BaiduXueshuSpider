@@ -1,0 +1,1 @@
+alter table title add cited varchar(10) --add column cited for title

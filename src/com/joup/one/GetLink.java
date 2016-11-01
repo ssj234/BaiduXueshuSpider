@@ -20,7 +20,7 @@ import com.sail.db.step.one.TitleDao;
 public class GetLink {
 	
 	Logger log=Logger.getLogger(GetLink.class);
-	private int per=300;//每次读取300条，查找link
+	private int per=6000;//每次读取300条，查找link
 	int status=0;
 	public static void main(String[] args){
 		
@@ -45,7 +45,8 @@ public class GetLink {
 				if(process!=null)process.show("开始处理:"+title.getId()+">"+title.getName());
 				parse(title);
 			}
-			tmp=tmp+per;//
+			tmp=tmp+titles.size();//
+			begin=begin+titles.size();//
 		}
 		if(process!=null)process.show("获取Link结束!!!");
 	}

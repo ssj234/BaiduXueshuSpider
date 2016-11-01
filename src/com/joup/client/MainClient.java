@@ -12,7 +12,7 @@ public class MainClient {
 		Display dis=new Display();
 		Shell shell=new Shell(dis);
 		CommonDialog cd=new CommonDialog(shell);
-		cd.setStyle("百度学术搜索-加油~", 600, 400);
+		cd.setStyle("百度学术搜索", 600, 400);
 		cd.open();
 	}
 

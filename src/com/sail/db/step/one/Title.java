@@ -9,6 +9,20 @@ public class Title {
 	public String showname;
 	public int status;
 	public int scope;
+	public String year;
+	public String cited;
+	public String getCited() {
+		return cited;
+	}
+	public void setCited(String cited) {
+		this.cited = cited;
+	}
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
+	}
 	public int getScope() {
 		return scope;
 	}

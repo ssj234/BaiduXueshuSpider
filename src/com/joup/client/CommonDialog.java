@@ -100,10 +100,10 @@ public class CommonDialog extends TitleAreaDialog{
 		group.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 1,2));
 		final Text file=new Text(group, SWT.BORDER|SWT.READ_ONLY);
 		file.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 2,1));
-		Button btn=getButton(group);
+		Button btn=getButton(group,1);
 		btn.setText("open");
 		final Combo scope=getScope(group,0);
-		final Button execute=getButton(group);
+		final Button execute=getButton(group,2);
 		execute.setEnabled(false);
 		execute.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL, false, false, 1,1));
 		btn.addListener(SWT.MouseDown, new Listener() {
@@ -127,21 +127,21 @@ public class CommonDialog extends TitleAreaDialog{
 		link.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 1,2));
 		link.setLayout(new GridLayout(3,false));
 		final Combo list=getScope(link,0);
-		Button linkBtn=getButton(link);
+		Button linkBtn=getButton(link,3);
 		
 		Group sign=new Group(main,SWT.NONE);
 		sign.setText("3.获取Sign");
 		sign.setLayout(new GridLayout(3,false));
 		sign.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 1,2));
 		Combo listsign=getScope(sign,2);
-		Button signBtn=getButton(sign);
+		Button signBtn=getButton(sign,4);
 		
 		Group abs=new Group(main,SWT.NONE);
 		abs.setText("4.获取参考文献");
 		abs.setLayout(new GridLayout(3,false));
 		abs.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true, false, 1,2));
 		Combo listabs=getScope(abs,4);
-		Button absBtn=getButton(abs);
+		Button absBtn=getButton(abs,5);
 		
 		Group console=new Group(main,SWT.NONE);
 		console.setText("console");
@@ -266,9 +266,9 @@ public class CommonDialog extends TitleAreaDialog{
 	}
 
 
-	public Button getButton(Composite parent){
+	public Button getButton(Composite parent,int i ){
 		Button btn=new Button(parent, SWT.READ_ONLY);
-		btn.setText("execute");
+		btn.setText("click here for STEP-"+i);
 		btn.setLayoutData(new GridData(GridData.FILL, GridData.FILL, false, false, 1,1));
 		return btn;
 	}

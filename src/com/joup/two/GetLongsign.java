@@ -27,10 +27,12 @@ public class GetLongsign {
 	Logger log=Logger.getLogger(GetLongsign.class);
 	TitleDao dao=new TitleDao();
 	int status=2;//2=获取link成功
-	private int per=300;//每次读取300条，查找link
+	private int per=6000;//每次读取300条，查找link
 	public static void main(String[] args){
-		GetLongsign tdk=new GetLongsign();
-		tdk.beginParse(1,null);
+		GetLongsign gl=new GetLongsign();
+		Title title=new Title();
+		title.setLink("http://www.tandfonline.com/doi/abs/10.1080/10473289.1999.10463841");
+		gl.getLongsign(title);
 	}
 	
 	public void beginParse(int scope,ProcessM process){
@@ -45,7 +47,8 @@ public class GetLongsign {
 				if(process!=null)process.show("开始处理:"+title.getId()+">"+title.getName());
 				getLongsign(title);
 			}
-			tmp=tmp+per;
+			tmp=tmp+titles.size();
+			begin=begin+titles.size();//
 		}
 		if(process!=null)process.show("获取Sign结束!!!");
 	}
@@ -107,6 +110,23 @@ public class GetLongsign {
 			update(title, null);
 			return null;
 		}
+		JSONArray years=(JSONArray) obj.get("sc_year");
+		if(years!=null&&years.size()>0){
+			//log.info(title.getId()+"获取sc_year失败");
+			//update(title, null);
+			//return null;
+			title.setYear(years.getString(0));
+		}
+		
+		//sc_cited
+		JSONArray citeds=(JSONArray) obj.get("sc_cited");
+		if(citeds!=null&&citeds.size()>0){
+			//log.info(title.getId()+"获取sc_year失败");
+			//update(title, null);
+			//return null;
+			title.setCited(citeds.getString(0));
+		}
+		
 		JSONArray array=(JSONArray) obj.get("sc_longsign");
 		if(array==null||array.size()==0){
 			log.info(title.getId()+"获取sc_longsign失败");
@@ -130,4 +150,6 @@ public class GetLongsign {
 		}
 		dao.update(title);
 	}
+	
+	
 }
